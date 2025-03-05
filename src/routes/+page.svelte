@@ -7,7 +7,7 @@
         const response = await fetch('http://127.0.0.1:8000/new_session/')
         const hehe = await response.json();
         console.log(hehe);
-        // window.location.replace("space/1")
+        window.location.replace("space/"+hehe.id)
     }
 
 	let sessions = $state([

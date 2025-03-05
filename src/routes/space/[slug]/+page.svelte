@@ -11,24 +11,24 @@
             <!-- Chat window -->
             <div class="max-h-211 overflow-hidden overflow-y-scroll col-span-2 w-full p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-8 dark:bg-gray-900 dark:border-gray-700">
 
-                <div class="flex w-full mt-2 space-x-3 max-w-lx">
-                    <div>
-                        <div class="bg-gray-700 p-3 rounded-r-lg rounded-bl-lg">
-                            <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                {#each { length: 8 }, rank}
+                    <div class="flex w-full mt-2 space-x-3 max-w-lx">
+                        <div>
+                            <div class="bg-gray-700 p-3 rounded-r-lg rounded-bl-lg">
+                                <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                            </div>
+                            <span class="text-xs text-gray-500 leading-none">2 min ago</span>
                         </div>
-                        <span class="text-xs text-gray-500 leading-none">2 min ago</span>
                     </div>
-                </div>
-
-                <div class="flex w-full mt-2 space-x-3 max-w-ls ml-auto justify-end">
-                    <div>
-                        <div class="bg-blue-600 text-white p-3 rounded-l-lg rounded-br-lg">
-                            <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.</p>
+                    <div class="flex w-full mt-2 space-x-3 max-w-ls ml-auto justify-end">
+                        <div>
+                            <div class="bg-blue-600 text-white p-3 rounded-l-lg rounded-br-lg">
+                                <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.</p>
+                            </div>
+                            <span class="text-xs text-gray-500 leading-none">2 min ago</span>
                         </div>
-                        <span class="text-xs text-gray-500 leading-none">2 min ago</span>
-                    </div>
-                </div>
-
+                    </div>    
+                {/each}
             </div>
             <div class="w-full p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-8 dark:bg-gray-800 dark:border-gray-700">
             </div>
