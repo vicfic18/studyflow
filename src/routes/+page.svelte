@@ -1,5 +1,15 @@
 
 <script>
+    import { GradientButton } from 'flowbite-svelte';
+
+    async function new_space() {
+        console.log("buttonpressed")
+        const response = await fetch('http://127.0.0.1:8000/new_session/')
+        const hehe = await response.json();
+        console.log(hehe);
+        // window.location.replace("space/1")
+    }
+
 	let sessions = $state([
         '1','2','3','4','5'
     ]);
@@ -16,6 +26,8 @@
 <h2 class="font-bold m-3">
     Your workspaces
 </h2>
+
+<GradientButton color="cyanToBlue" class="font-black" on:click={new_space}>New Space!</GradientButton>
 
 
 <div class="grid grid-cols-4 gap-4 m-3">
