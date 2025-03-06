@@ -2,6 +2,7 @@
 	import type { PageProps } from './$types';
     // import { onMount, tick } from "svelte"; 
     import { Input, Button } from 'flowbite-svelte';
+    import snarkdown from 'snarkdown';
 
 	let { data }: PageProps = $props();
     console.log(data.lehistory);
@@ -67,18 +68,16 @@
                         <div class="flex w-full mt-2 space-x-3 max-w-lx">
                                 <div>
                                     <div class="bg-gray-700 p-3 rounded-r-lg rounded-bl-lg">
-                                        <p class="text-sm">{@html mess.content.replace(/\n/g, '<br>')}</p>
+                                        <p class="text-xl">{@html snarkdown(mess.content.replace(/\n/g, '<br>'))}</p>
                                     </div>
-                                    <span class="text-xs text-gray-500 leading-none">2 min ago</span>
                                 </div>
                         </div>                    
                     {:else}
                         <div class="flex w-full mt-2 space-x-3 max-w-ls ml-auto justify-end">
                             <div>
                                 <div class="bg-blue-600 text-white p-3 rounded-l-lg rounded-br-lg">
-                                    <p class="text-sm">{mess.content}</p>
+                                    <p class="text-xl">{mess.content}</p>
                                 </div>
-                                <span class="text-xs text-gray-500 leading-none">2 min ago</span>
                             </div>
                         </div>  
                     {/if}
