@@ -7,8 +7,9 @@
 	let { data }: PageProps = $props();
     console.log(data.lehistory);
     let mess_list = $state(data.lehistory.chat_history);
-    let q_box = "";
-    let bubble_div;
+    // svelte-ignore non_reactive_update
+        let q_box = "";
+    let bubble_div: any;
     // bubble_div.scrollTop = bubble_div.scrollHeight;
 
     // onMount(() => {
@@ -54,7 +55,11 @@
 
 <div class="h-screen">
     <div class='flex flex-col h-full p-5'>
-        <h1 class="font-bold text-3xl flex flex-row mb-2">{data.lehistory.description}</h1>
+        <!-- Nav bar kinda -->
+        <div class="flex flex-row mb-2 justify-between">
+            <h1 class="font-bold text-3xl">{data.lehistory.description}</h1>
+            <Button color="light" href="/">Go back!</Button>
+        </div>
         <div class="grid grid-cols-4 gap-4 flex-row grow">
             <div class="w-full p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-8 dark:bg-gray-800 dark:border-gray-700">
             </div>
