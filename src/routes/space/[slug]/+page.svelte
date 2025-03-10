@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { PageProps } from './$types';
-    import { onMount, tick } from "svelte"; 
+    // import { onMount, tick } from "svelte"; 
     import { Input, Button } from 'flowbite-svelte';
     import snarkdown from 'snarkdown';
 
@@ -8,8 +8,13 @@
     console.log(data.lehistory);
     let mess_list = $state(data.lehistory.chat_history);
     mess_list.shift()
+    let file_list = $state(data.lefiles);
+    console.log(file_list)
     let q_box = $state("");
     let bubble_div: any;
+    let cur_file = $state<HTMLInputElement>();
+
+    $inspect(cur_file?.files)
     // bubble_div.scrollTop = bubble_div.scrollHeight;
 
     // onMount(() => {
@@ -33,7 +38,7 @@
         const rawResponse = await fetch('http://127.0.0.1:8000/chat_completion/', {
             method: 'POST',
             headers: {
-            'Accept': 'application/json',
+            'Accept': 'application/json; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW',
             'Content-Type': 'application/json'
             },
             body: JSON.stringify({
@@ -50,6 +55,32 @@
         });
         // Scrolling into view
         bubble_div.scrollTop = bubble_div.scrollHeight;
+    }
+
+
+    async function new_file() {
+        console.log("newfile uploaded");
+        console.log(cur_file.files[0]);
+
+        const rawResponse = await fetch('http://127.0.0.1:8000/upload_resource/'+data.leslug, {
+            method: 'POST',
+            // headers: {
+            // 'Accept': 'application/json',
+            // 'Content-Type': 'multipart/form-data'
+            // },
+            body: (() => {
+                const formData = new FormData();
+                formData.append('file', cur_file.files[0]);
+                return formData;
+            })()
+        });
+        const content = await rawResponse.json();
+
+        $inspect(cur_file?.files)
+        file_list.push({
+            file_id: "we dont have it",
+            filename: cur_file.files[0],
+        });
     }
 
     function handleEnterKeyPress(event: any) {
@@ -76,9 +107,15 @@
 <div class="h-screen">
     <div class='flex flex-col h-full p-5'>
         <!-- Nav bar kinda -->
-        <div class="flex flex-row mb-2 justify-between">
-            <h1 class="font-bold text-3xl">{data.lehistory.description}</h1>
-            <Button color="light" href="/">Go back!</Button>
+        <div class="flex flex-row mb-2">
+            <Button color="light" href="/">
+                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 1 1.3 6.326a.91.91 0 0 0 0 1.348L7 13"></path>
+                </svg>
+            </Button>
+
+            <h1 class="font-bold text-3xl ml-4">{data.lehistory.description}</h1>
+
         </div>
         <div class="grid grid-cols-4 gap-4 flex-row grow">
             <!-- Source management -->
@@ -94,16 +131,17 @@
                             <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
                             <p class="text-xs text-gray-500 dark:text-gray-400">PDF, PPTX, DOCX, TXT, etc</p>
                         </div>
-                        <input id="dropzone-file" type="file" class="hidden" />
+                        <input id="dropzone-file" type="file" class="hidden" bind:this={cur_file} oninput={new_file}/>
                     </label>
                 </div>
 
                 <!-- Sources List -->
                 <div>
-                    <h3 class="text-xl my-2">Document Sources</h3>
+                    <h3 class="text-2xl my-2">Document Sources</h3>
                     <ul>
-                        <li>source.txt</li>
-                        <li>idk.pdf</li>
+                        {#each file_list as file}
+                            <li class="text-xl hover:bg-gray-600 rounded-lg m-1 py-1">📄 {file.filename}</li>
+                        {/each}
                     </ul>
 
                 </div>
@@ -139,7 +177,11 @@
                 <!-- Input Box -->
                 <div class="m-2">
                     <Input id="query_box" placeholder="Ask something..." size="lg" on:keydown={handleEnterKeyPress} bind:value={q_box}>
-                      <Button slot="right" size="sm" on:click={new_question}>Ask</Button>
+                      <Button slot="right" color="blue" size="sm" on:click={new_question}>
+                        <svg class="w-5 h-6" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"></path>
+                          </svg>        
+                      </Button>
                     </Input>
                 </div>
 
