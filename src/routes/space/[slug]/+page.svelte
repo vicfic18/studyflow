@@ -111,6 +111,21 @@
         }
     }
 
+    async function actionButton(qatype: String) {
+        console.log("QA button clicked!")
+
+        bubble_div.scrollTop = bubble_div.scrollHeight;
+
+        const qa_resp = await fetch('http://127.0.0.1:8000/'+qatype+'/'+data.leslug)
+        const qa_dat = await qa_resp.json();
+
+        mess_list.push({
+            role: "assistant",
+            content: qa_dat
+        });
+        // Scrolling into view
+        bubble_div.scrollTop = bubble_div.scrollHeight;
+    }
 </script>
 
 
@@ -200,9 +215,11 @@
                 <div class="w-full p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-8 dark:bg-gray-900 dark:border-gray-600">
                     <h1 class="text-xl font-bold mb-4">Quick Options</h1>
                     <div class="grid-cols-2 gap-4 justify-between">
-                        <Button outline color="green" class="w-full my-2">Quick Summary</Button>
-                        <Button outline color="blue" class="w-full my-2">Frequently Asked Questions</Button>
-                        <Button outline color="yellow" class="w-full my-2">Study Plans</Button>
+                        <!-- The on:click event thing was messed up so I pulled this little manoeuvre with the event arg -->
+                        <Button on:click={(event) => actionButton("quick_summary")} outline color="blue" class="w-full my-2">Quick Summary</Button>
+                        <Button on:click={(event) => actionButton("revision_notes")} outline color="blue" class="w-full my-2">Revision Notes</Button>
+                        <Button on:click={(event) => actionButton("faqs")} outline color="blue" class="w-full my-2">Frequently Asked Questions</Button>
+                        <Button on:click={(event) => actionButton("study_plan")} outline color="blue" class="w-full my-2">Study Plan</Button>
                     </div>
                 </div>
             </div>
