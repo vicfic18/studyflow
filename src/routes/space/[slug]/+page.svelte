@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { PageProps } from './$types';
-    // import { onMount, tick } from "svelte"; 
+    // import { onMount, tick } from "svelte";
     import { Input, Button } from 'flowbite-svelte';
     import snarkdown from 'snarkdown';
 
@@ -14,16 +14,22 @@
     let bubble_div: any;
     let cur_file = $state<HTMLInputElement>();
 
-    $inspect(cur_file?.files)
+    // $inspect(cur_file?.files)
     // bubble_div.scrollTop = bubble_div.scrollHeight;
 
     // onMount(() => {
     //     bubble_div.scrollTop = bubble_div.scrollHeight;
     // });
 
+    async function disp_files() {
+        const file_resp = await fetch('http://127.0.0.1:8000/list_files/'+data.leslug)
+        const file_dat = await file_resp.json();
+        return file_dat;
+    }
+
     async function new_question() {
         console.log("askbuttonpressed")
-        
+
         const boop = q_box;
         q_box = ""
         console.log(bubble_div);
@@ -32,7 +38,7 @@
             role: "user",
             content: boop,
         });
-        
+
         bubble_div.scrollTop = bubble_div.scrollHeight;
 
         const rawResponse = await fetch('http://127.0.0.1:8000/chat_completion/', {
@@ -81,6 +87,8 @@
             file_id: "we dont have it",
             filename: cur_file.files[0],
         });
+
+        let file_list = $state(disp_files())
     }
 
     function handleEnterKeyPress(event: any) {
@@ -96,6 +104,8 @@
 
         if (queryIndex !== -1) {
             return sentence.substring(queryIndex + queryMarker.length).trim();
+        } else if (sentence.indexOf("New file uploaded:") != -1) {
+            return "File uploaded."
         } else {
             return sentence;
         }
@@ -120,7 +130,7 @@
         <div class="grid grid-cols-4 gap-4 flex-row grow">
             <!-- Source management -->
             <div class="w-full p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-            
+
                 <!-- Drop Zone -->
                 <div class="flex items-center justify-center w-full">
                     <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
@@ -145,7 +155,7 @@
                     </ul>
 
                 </div>
-                
+
 
             </div>
             <!-- Chat window -->
@@ -161,7 +171,7 @@
                                         <p class="text-xl">{@html snarkdown(mess.content.replace(/\n/g, '<br>'))}</p>
                                     </div>
                                 </div>
-                        </div>                    
+                        </div>
                     {:else}
                         <div class="flex w-full mt-2 space-x-3 max-w-ls ml-auto justify-end">
                             <div>
@@ -169,7 +179,7 @@
                                     <p class="text-xl">{extractUserQuery(mess.content)}</p>
                                 </div>
                             </div>
-                        </div>  
+                        </div>
                     {/if}
                     {/each}
                 </div>
@@ -180,7 +190,7 @@
                       <Button slot="right" color="blue" size="sm" on:click={new_question}>
                         <svg class="w-5 h-6" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
                             <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"></path>
-                          </svg>        
+                          </svg>
                       </Button>
                     </Input>
                 </div>
